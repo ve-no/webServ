@@ -27,13 +27,13 @@ class Location
 
 		void setPath(std::string parametr);
 		void setRootLocation(std::string parametr);
-		void setMethods(std::vector<std::string> methods);
+		void setMethods(std::string methods);
 		void setAutoindex(std::string parametr);
 		void setIndexLocation(std::string parametr);
 		void setReturn(std::string parametr);
 		void setAlias(std::string parametr);
-		void setCgiPath(std::vector<std::string> path);
-		void setCgiExtension(std::vector<std::string> extension);
+		void setCgiPath(std::string path);
+		void setCgiExtension(std::string extension);
 		void setMaxBodySize(std::string parametr);
 		void setMaxBodySize(unsigned long parametr);
 

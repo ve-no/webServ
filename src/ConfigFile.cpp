@@ -17,14 +17,12 @@ int ConfigFile::getTypePath(std::string const path) {
 	return 0;
 }
 
-
 // Check file exist and readable
 int ConfigFile::accessFile(std::string const path, int mode) {
 	if (access(path.c_str(), mode) == -1)
 		return -1;
 	return 0;
 }
-
 
 // Read file to string
 std::string ConfigFile::fileToString(std::string path) {
@@ -57,6 +55,5 @@ int ConfigFile::isReadableAndExist(std::string const path, std::string const ind
 		if ((accessFile(path + index, R_OK)) == -1)
 			return -1;
 	return 0;
-
 }
 
