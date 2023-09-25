@@ -10,7 +10,7 @@ class ConfigFile {
 
 		static int getTypePath(std::string const path);
 		static int accessFile(std::string const path, int mode);
-		std::string	fileToString(std::string path);
+		static std::string	fileToString(std::string path);
 		static int isReadableAndExist(std::string const path, std::string const index);
 };
 
