@@ -6,7 +6,7 @@ TEST_SRC = ${addprefix src/, example.cpp}
 
 INC_DIR = inc
 
-INC = ${addprefix inc/, Webserv.hpp Request.hpp RequestParser.hpp main.hpp}
+INC = ${addprefix inc/, Webserv.hpp Request.hpp RequestParser.hpp main.hpp ConfigFile.hpp Location.hpp ServConf.hpp ParseConfigFile.hpp}
 
 SRC = ${MAIN_SRC} ${REQUEST_SRC}
 
