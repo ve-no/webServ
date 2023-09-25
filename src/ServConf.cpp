@@ -64,7 +64,8 @@ void ServConf::setClientMaxBodySize(std::string parametr) {
 	_client_max_body_size = std::stoi(parametr.c_str());
 }
 
-void ServConf::setErrorPages(std::vector<std::string> &parametr) {
+void ServConf::setErrorPages(std::string &param) {
+	std::vector<std::string> parametr = ft_split(param, ' ');
 	std::vector<std::string>::iterator it = parametr.begin();
 	std::vector<std::string>::iterator ite = parametr.end();
 	for (; it != ite; ++it) {
