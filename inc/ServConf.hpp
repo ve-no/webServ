@@ -19,7 +19,6 @@ enum error_pages
 	SERVICE_UNAVAILABLE = 503,
 	GATEWAY_TIMEOUT = 504,
 	HTTP_VERSION_NOT_SUPPORTED = 505,
-
 };
 
 class ServConf
@@ -44,14 +43,14 @@ class ServConf
 		ServConf &operator=(const ServConf & rhs);
 
 		void initErrorPages(void);
-
+		// void setListen(std::string parametr);
 		void setServerName(std::string server_name);
 		void setHost(std::string parametr);
 		void setRoot(std::string root);
 		void setFd(int);
 		void setPort(std::string parametr);
 		void setClientMaxBodySize(std::string parametr);
-		void setErrorPages(std::vector<std::string> &parametr);
+		void setErrorPages(std::string &param);
 		void setIndex(std::string index);
 		void setLocation(std::string nameLocation, std::vector<std::string> parametr);
 		void setAutoindex(std::string autoindex);
