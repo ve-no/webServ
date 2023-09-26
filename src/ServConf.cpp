@@ -1,6 +1,11 @@
 #include "ServConf.hpp"
 
-ServConf::ServConf() {}
+ServConf::ServConf() {
+	setRoot("/");
+	setPort("80");
+	setHost("localhost");
+	setIndex("index.html");
+}
 
 ServConf::~ServConf() {}
 
@@ -44,11 +49,11 @@ void ServConf::setServerName(std::string server_name) {
 	_server_name = server_name;
 }
 
-void ServConf::setHost(std::string parametr = "localhost") {
+void ServConf::setHost(std::string parametr) {
 	_host = inet_addr(parametr.c_str());
 }
 
-void ServConf::setRoot(std::string root = "/") {
+void ServConf::setRoot(std::string root) {
 	_root = root;
 }
 
@@ -66,28 +71,28 @@ void ServConf::setClientMaxBodySize(std::string parametr) {
 
 void ServConf::setErrorPages(std::vector<std::string> &parametr) {
 	if (parametr.size() % 2 != 0)
-		throw std::runtime_error("Error: invalid error_page");
+		throw std::runtime_error("Error: invalid error_page 1");
 	for (size_t i = 0; i < parametr.size(); i++) {
 		for (size_t j = 0; j < parametr[i].size(); j++) {
 			if (!std::isdigit(parametr[i][j]))
-				throw std::runtime_error("Error: invalid error_page");
+				throw std::runtime_error("Error: invalid error_page 2");
 		}
 		if (atoi(parametr[i].c_str()) < 100 || atoi(parametr[i].c_str()) > 599)
-			throw std::runtime_error("Error: invalid error_page");
+			throw std::runtime_error("Error: invalid error_page 3");
 		error_pages key = static_cast<error_pages>(atoi(parametr[i].c_str()));
 		++i;
 		std::string value = parametr[i];
-		if (ConfigFile::getTypePath(getRoot() + value) != 2)
-			throw std::runtime_error("Error: invalid error_page");
-		if (ConfigFile::accessFile(getRoot() + value, F_OK) < 0
-			|| ConfigFile::accessFile(getRoot() + value, R_OK) < 0)
+		if (ConfigFile::getTypePath(value) != 2)
+			throw std::runtime_error("Error: invalid error_page 4");
+		if (ConfigFile::accessFile(value, F_OK) < 0
+			|| ConfigFile::accessFile(value, R_OK) < 0)
 			throw std::runtime_error("Error: invalid error_page");
 		_error_pages[key] = value;
 
 	}
 }
 
-void ServConf::setIndex(std::string index = "index.html") {
+void ServConf::setIndex(std::string index) {
 	_index = index;
 }
 
@@ -144,8 +149,8 @@ bool ServConf::isValidErrorPages() {
 	std::map<error_pages, std::string>::iterator it = _error_pages.begin();
 	std::map<error_pages, std::string>::iterator ite = _error_pages.end();
 	for (; it != ite; ++it) {
-		if (ConfigFile::accessFile(getRoot() + it->second, F_OK) < 0
-			|| ConfigFile::accessFile(getRoot() + it->second, R_OK) < 0)
+		if (ConfigFile::accessFile(it->second, F_OK) < 0
+			|| ConfigFile::accessFile(it->second, R_OK) < 0)
 			return false;
 	}
 	return true;
