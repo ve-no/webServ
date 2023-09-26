@@ -38,7 +38,7 @@ Location::~Location() {}
 // setters
 void Location::setMethods(std::string method) {
 	_methods = std::vector<bool>(3, false);
-	std::vector<std::string> methods = ft_split(method, ' ');
+	std::vector<std::string> methods = ft_split(method);
 	for (size_t i = 0; i < methods.size(); i++) {
 		if (methods[i] == "GET")
 			_methods[0] = true;
@@ -70,11 +70,14 @@ void Location::setReturn(std::string parametr) { _return = parametr; }
 
 void Location::setAlias(std::string parametr) { _alias = parametr; }
 
-void Location::setCgiPath(std::string path) { _cgi_path = ft_split(path, ' '); }
+void Location::setCgiPath(std::string path) { _cgi_path = ft_split(path); }
 
-void Location::setCgiExtension(std::string extension) { _cgi_ext = ft_split(extension, ' '); }
+void Location::setCgiExtension(std::string extension) { _cgi_ext = ft_split(extension); }
 
-void Location::setMaxBodySize(std::string parametr) { _client_max_body_size = std::stoi(parametr); }
+void Location::setMaxBodySize(std::string parametr) {
+	std::istringstream iss(parametr);
+	iss >> _client_max_body_size;
+}
 
 void Location::setMaxBodySize(unsigned long parametr) { _client_max_body_size = parametr; }
 
