@@ -40,7 +40,7 @@ std::string ConfigFile::fileToString(std::string path) {
 
 int ConfigFile::isReadableAndExist(std::string const path, std::string const index) {
 	int		type;
-	int		access;
+	// int		access;
 
 	type = getTypePath(path);
 	if (type == -1)
