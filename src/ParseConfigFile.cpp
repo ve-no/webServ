@@ -29,6 +29,7 @@ void ParseConfigFile::splitServers(std::string &content) {
 		end = findEndServer(start, content);
 		_server_config.push_back(content.substr(start, end - start + 1));
 		_nb_server++;
+		std::cout << "hello world: " << start << std::endl;
 		start = end + 1;
 	}
 }
@@ -81,7 +82,6 @@ void ParseConfigFile::createServer(std::string &config, ServConf &server) {
 		std::vector<std::string> param = ft_split(str);
 		if (param.size() > 1) {
 			std::string key = param[0];
-			std::cout << "line size: " << key << std::endl;
 			std::vector<std::string> value;
 			for (size_t i = 1; i < param.size(); i++)
 				value.push_back(param[i]);
@@ -133,17 +133,13 @@ void ParseConfigFile::createServer(std::string &config, ServConf &server) {
 			if (param.empty() || param[0] == "}")
 				continue;
 			else
-				std::cout << "param:" << param[0] << ":" << " size: "<< param.size() << std::endl;
 			throw std::runtime_error("Error: Server config file is not well formated 9");
 		}
 	}
-	if (!server.getPort())
-		std::cout << "get" << server.getPort() << std::endl;
-		// throw std::runtime_error("Error: Server config file is not well formated 10");
 	if (ConfigFile::isReadableAndExist(server.getRoot(), server.getIndex()) < 0)
-		throw std::runtime_error("Error: Index from config file not found");
+		throw std::runtime_error("Error: Index from config file not found 1");
 	if (ConfigFile::isReadableAndExist(server.getRoot(), "") < 0)
-		throw std::runtime_error("Error: Root from config file not found");
+		throw std::runtime_error("Error: Root from config file not found 2");
 	if (!server.checkLocaitons())
 		throw std::runtime_error("Error: in Location from config file");
 	if (!server.isValidErrorPages())
@@ -167,8 +163,15 @@ std::vector<ServConf> ParseConfigFile::getServers() {
 int ParseConfigFile::print() {
 	std::cout << "nb server: " << _nb_server << std::endl;
 	for (size_t i = 0; i < _server_config.size(); i++) {
-		std::cout << "server config: " << _server_config[i] << std::endl;
+		std::cout << "getRoot: " << _servers[i].getRoot() << std::endl;
+		std::cout << "getPort: " << _servers[i].getPort() << std::endl;
+		std::cout << "getHost: " << _servers[i].getHost() << std::endl;
+		std::cout << "getServerName: " << _servers[i].getServerName() << std::endl;
+		std::cout << "getClientMaxBodySize: " << _servers[i].getClientMaxBodySize() << std::endl;
+		std::cout << "getIndex: " << _servers[i].getIndex() << std::endl;
+		std::cout << "getAutoindex: " << _servers[i].getAutoindex() << std::endl;
+		std::cout << "getErrorPages: " << std::endl;
 	}
-	return (0);
+	return 0;
 }
 
