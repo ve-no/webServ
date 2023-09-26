@@ -1,14 +1,14 @@
-MAIN_SRC = ${addprefix src/, main.cpp Webserv.cpp}
+SRC = ${addprefix src/, main.cpp ConfigFile.cpp Location.cpp ServConf.cpp ParseConfigFile.cpp Webserv.cpp}
 
-REQUEST_SRC = ${addprefix src/request/, Request.cpp RequestParser.cpp}
+# REQUEST_SRC = ${addprefix src/request/, Request.cpp RequestParser.cpp}
 
-TEST_SRC = ${addprefix src/, example.cpp}
+# TEST_SRC = ${addprefix src/, example.cpp}
 
 INC_DIR = inc
 
-INC = ${addprefix inc/, Webserv.hpp Request.hpp RequestParser.hpp main.hpp ConfigFile.hpp Location.hpp ServConf.hpp ParseConfigFile.hpp}
+INC = ${addprefix inc/, ConfigFile.hpp Location.hpp ServConf.hpp ParseConfigFile.hpp Webserv.hpp}
 
-SRC = ${MAIN_SRC} ${REQUEST_SRC}
+# SRC = ${MAIN_SRC} ${REQUEST_SRC}
 
 NAME = webserv
 
