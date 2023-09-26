@@ -17,16 +17,11 @@
 # include "Location.hpp"
 # include "ServConf.hpp"
 # include "ConfigFile.hpp"
+# include "ParseConfigFile.hpp"
 
 #define MAX_CONTENT_LENGTH 99999999
 
-std::vector<std::string> ft_split(const std::string& s, char delimiter) {
-	std::vector<std::string> tokens;
-	std::string token;
-	std::istringstream tokenStream(s);
-	while (std::getline(tokenStream, token, delimiter))
-		tokens.push_back(token);
-	return tokens;
-}
+std::vector<std::string> ft_split(const std::string& s);
+std::vector<std::string> splitParametrs(std::string line, std::string sep);
 
 #endif
