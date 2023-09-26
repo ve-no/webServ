@@ -44,11 +44,11 @@ void ServConf::setServerName(std::string server_name) {
 	_server_name = server_name;
 }
 
-void ServConf::setHost(std::string parametr) {
+void ServConf::setHost(std::string parametr = "localhost") {
 	_host = inet_addr(parametr.c_str());
 }
 
-void ServConf::setRoot(std::string root) {
+void ServConf::setRoot(std::string root = "/") {
 	_root = root;
 }
 
@@ -57,51 +57,37 @@ void ServConf::setFd(int fd) {
 }
 
 void ServConf::setPort(std::string parametr) {
-	_port = std::stoi(parametr.c_str());
+	_port = atoi(parametr.c_str());
 }
 
 void ServConf::setClientMaxBodySize(std::string parametr) {
-	_client_max_body_size = std::stoi(parametr.c_str());
+	_client_max_body_size = atoi(parametr.c_str());
 }
 
-void ServConf::setErrorPages(std::string &param) {
-	std::vector<std::string> parametr = ft_split(param, ' ');
-	std::vector<std::string>::iterator it = parametr.begin();
-	std::vector<std::string>::iterator ite = parametr.end();
-	for (; it != ite; ++it) {
-		std::string::size_type pos = it->find(" ");
-		if (pos != std::string::npos) {
-			std::string error = it->substr(0, pos);
-			std::string path = it->substr(pos + 1);
-			if (error == "400")
-				_error_pages[BAD_REQUEST] = path;
-			else if (error == "401")
-				_error_pages[UNAUTHORIZED] = path;
-			else if (error == "403")
-				_error_pages[FORBIDDEN] = path;
-			else if (error == "404")
-				_error_pages[NOT_FOUND] = path;
-			else if (error == "405")
-				_error_pages[METHOD_NOT_ALLOWED] = path;
-			else if (error == "413")
-				_error_pages[REQUEST_ENTITY_TOO_LARGE] = path;
-			else if (error == "500")
-				_error_pages[INTERNAL_SERVER_ERROR] = path;
-			else if (error == "501")
-				_error_pages[NOT_IMPLEMENTED] = path;
-			else if (error == "502")
-				_error_pages[BAD_GATEWAY] = path;
-			else if (error == "503")
-				_error_pages[SERVICE_UNAVAILABLE] = path;
-			else if (error == "504")
-				_error_pages[GATEWAY_TIMEOUT] = path;
-			else if (error == "505")
-				_error_pages[HTTP_VERSION_NOT_SUPPORTED] = path;
+void ServConf::setErrorPages(std::vector<std::string> &parametr) {
+	if (parametr.size() % 2 != 0)
+		throw std::runtime_error("Error: invalid error_page");
+	for (size_t i = 0; i < parametr.size(); i++) {
+		for (size_t j = 0; j < parametr[i].size(); j++) {
+			if (!std::isdigit(parametr[i][j]))
+				throw std::runtime_error("Error: invalid error_page");
 		}
+		if (atoi(parametr[i].c_str()) < 100 || atoi(parametr[i].c_str()) > 599)
+			throw std::runtime_error("Error: invalid error_page");
+		error_pages key = static_cast<error_pages>(atoi(parametr[i].c_str()));
+		++i;
+		std::string value = parametr[i];
+		if (ConfigFile::getTypePath(getRoot() + value) != 2)
+			throw std::runtime_error("Error: invalid error_page");
+		if (ConfigFile::accessFile(getRoot() + value, F_OK) < 0
+			|| ConfigFile::accessFile(getRoot() + value, R_OK) < 0)
+			throw std::runtime_error("Error: invalid error_page");
+		_error_pages[key] = value;
+
 	}
 }
 
-void ServConf::setIndex(std::string index) {
+void ServConf::setIndex(std::string index = "index.html") {
 	_index = index;
 }
 
@@ -158,8 +144,8 @@ bool ServConf::isValidErrorPages() {
 	std::map<error_pages, std::string>::iterator it = _error_pages.begin();
 	std::map<error_pages, std::string>::iterator ite = _error_pages.end();
 	for (; it != ite; ++it) {
-		if (ConfigFile::accessFile(getRoot() + it->second, 0) < 0
-			|| ConfigFile::accessFile(getRoot() + it->second, 4) < 0)
+		if (ConfigFile::accessFile(getRoot() + it->second, F_OK) < 0
+			|| ConfigFile::accessFile(getRoot() + it->second, R_OK) < 0)
 			return false;
 	}
 	return true;
