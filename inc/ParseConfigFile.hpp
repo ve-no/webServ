@@ -24,9 +24,7 @@ class ParseConfigFile {
 		size_t findEndServer(size_t start, std::string &content);
 		void createServer(std::string &config, ServConf &server);
 		void checkServers();
-		std::vector<ServConf>	getServers();
-		int	stringCompare(std::string str1, std::string str2, size_t pos);
-
+		std::vector<ServConf> getServers();
 		int print();
 };
 
