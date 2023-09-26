@@ -7,6 +7,7 @@ class Location;
 
 enum error_pages
 {
+	SUCCESS = 200,
 	BAD_REQUEST = 400,
 	UNAUTHORIZED = 401,
 	FORBIDDEN = 403,
@@ -50,7 +51,7 @@ class ServConf
 		void setFd(int);
 		void setPort(std::string parametr);
 		void setClientMaxBodySize(std::string parametr);
-		void setErrorPages(std::string &param);
+		void setErrorPages(std::vector<std::string> &parametr);
 		void setIndex(std::string index);
 		void setLocation(std::string nameLocation, std::vector<std::string> parametr);
 		void setAutoindex(std::string autoindex);
