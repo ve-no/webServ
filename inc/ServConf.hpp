@@ -56,7 +56,6 @@ class ServConf
 		void setLocation(std::string nameLocation, std::vector<std::string> parametr);
 		void setAutoindex(std::string autoindex);
 
-		bool isValidHost(std::string host) const;
 		bool isValidErrorPages();
 		int isValidLocation(Location &location) const;
 

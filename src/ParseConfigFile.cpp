@@ -19,18 +19,14 @@ void ParseConfigFile::parseConfigFile(const std::string &config_file) {
 
 void ParseConfigFile::splitServers(std::string &content) {
 	size_t start = 0;
-	size_t end = 0;
-	// if (content.find("#") != std::string::npos)
-	// 	content.erase(content.find("#"));
-	// content.erase(0, content.find_first_not_of(" \t"));
-	// content.erase(content.find_last_not_of(" \t") + 1);
-	while (start < content.length()) {
+	size_t end = 1;
+	while (start < content.length() && start != end) {
 		start = findStartServer(start, content);
 		end = findEndServer(start, content);
 		_server_config.push_back(content.substr(start, end - start + 1));
 		_nb_server++;
-		std::cout << "hello world: " << start << std::endl;
-		start = end + 1;
+		std::cout << "hello world: " << start << "    "<< content.length() << " end " << end << std::endl;
+		start = end;
 	}
 }
 
@@ -64,7 +60,7 @@ size_t ParseConfigFile::findEndServer(size_t start, std::string &content) {
 			count++;
 		else if (content[pos] == '}') {
 			if (count == 0)
-				return (pos);
+				return (pos + 1);
 			count--;
 		}
 	}
@@ -140,8 +136,8 @@ void ParseConfigFile::createServer(std::string &config, ServConf &server) {
 		throw std::runtime_error("Error: Index from config file not found 1");
 	if (ConfigFile::isReadableAndExist(server.getRoot(), "") < 0)
 		throw std::runtime_error("Error: Root from config file not found 2");
-	if (!server.checkLocaitons())
-		throw std::runtime_error("Error: in Location from config file");
+	// if (!server.checkLocaitons())
+	// 	throw std::runtime_error("Error: in Location from config file");
 	if (!server.isValidErrorPages())
 		throw std::runtime_error("Error: in ErrorPages from config file");
 }
@@ -170,7 +166,45 @@ int ParseConfigFile::print() {
 		std::cout << "getClientMaxBodySize: " << _servers[i].getClientMaxBodySize() << std::endl;
 		std::cout << "getIndex: " << _servers[i].getIndex() << std::endl;
 		std::cout << "getAutoindex: " << _servers[i].getAutoindex() << std::endl;
-		std::cout << "getErrorPages: " << std::endl;
+		std::map<error_pages, std::string> errors = _servers[i].getErrorPages();
+		std::map<error_pages, std::string>::iterator it = errors.begin();
+		std::map<error_pages, std::string>::iterator ite = errors.end();
+		for (; it != ite; ++it) {
+			std::cout  << "error code: "<< it->first << "\nerror page: " << it->second << std::endl;
+		}
+		std::vector<Location> locations = _servers[i].getLocations();
+		std::vector<Location>::iterator itl = locations.begin();
+		std::vector<Location>::iterator itle = locations.end();
+		for (; itl != itle; itl++) {
+			std::cout << "location: " << itl->getPath() << std::endl;
+			std::cout << "location root: " << itl->getRootLocation()<< std::endl;
+			std::cout << "location autoindex: " << itl->getAutoindex()<< std::endl;
+			std::cout << "location index: " << itl->getIndexLocation()<< std::endl;
+			std::cout << "location return: " << itl->getReturn()<< std::endl;
+			std::cout << "location alias: " << itl->getAlias()<< std::endl;
+			std::vector<std::string> getCgi = itl->getCgiPath();
+			std::vector<std::string>::iterator itc = getCgi.begin();
+			std::vector<std::string>::iterator itce = getCgi.end();
+			for (; itc != itce; itc++) {
+				std::cout << "location cgi path: " << *itc<< std::endl;
+			}
+			std::vector<std::string> getCgiExt = itl->getCgiExtension();
+			std::vector<std::string>::iterator itce2 = getCgiExt.begin();
+			std::vector<std::string>::iterator itce2e = getCgiExt.end();
+			for (; itce2 != itce2e; itce2++) {
+				std::cout << "location cgi extension: " << *itce2<< std::endl;
+			}
+			// std::cout << "location cgi path: " << itl->getCgiPath()[0]<< std::endl;
+			// std::cout << "location cgi extension: " << itl->getCgiExtension()[0]<< std::endl;
+			std::cout << "location max body size: " << itl->getMaxBodySize()<< std::endl;
+			std::vector<bool> getMethods = itl->getMethods();
+			std::vector<bool>::iterator itm = getMethods.begin();
+			std::vector<bool>::iterator itme = getMethods.end();
+			for (; itm != itme; itm++) {
+				std::cout << "location methods: " << *itm<< std::endl;
+			}
+			std::cout << "location methods: " << itl->getPrintMethods()<< std::endl;
+		}
 	}
 	return 0;
 }

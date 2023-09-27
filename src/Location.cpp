@@ -36,9 +36,8 @@ Location &Location::operator=(const Location &rhs) {
 Location::~Location() {}
 
 // setters
-void Location::setMethods(std::string method) {
+void Location::setMethods(std::vector<std::string> methods) {
 	_methods = std::vector<bool>(3, false);
-	std::vector<std::string> methods = ft_split(method);
 	for (size_t i = 0; i < methods.size(); i++) {
 		if (methods[i] == "GET")
 			_methods[0] = true;
@@ -70,9 +69,9 @@ void Location::setReturn(std::string parametr) { _return = parametr; }
 
 void Location::setAlias(std::string parametr) { _alias = parametr; }
 
-void Location::setCgiPath(std::string path) { _cgi_path = ft_split(path); }
+void Location::setCgiPath(std::vector<std::string> path) { _cgi_path = path; }
 
-void Location::setCgiExtension(std::string extension) { _cgi_ext = ft_split(extension); }
+void Location::setCgiExtension(std::vector<std::string> extension) { _cgi_ext = extension; }
 
 void Location::setMaxBodySize(std::string parametr) {
 	std::istringstream iss(parametr);

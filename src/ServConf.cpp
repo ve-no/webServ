@@ -50,6 +50,12 @@ void ServConf::setServerName(std::string server_name) {
 }
 
 void ServConf::setHost(std::string parametr) {
+	struct sockaddr_in addr;
+
+	if (parametr == "localhost")
+		parametr = "127.0.0.1";
+	if (inet_pton(AF_INET, parametr.c_str(), &addr.sin_addr) == 0)
+		throw std::runtime_error("Error: invalid host");
 	_host = inet_addr(parametr.c_str());
 }
 
@@ -98,31 +104,55 @@ void ServConf::setIndex(std::string index) {
 
 void ServConf::setLocation(std::string nameLocation, std::vector<std::string> parametr) {
 	Location location;
-	std::vector<std::string>::iterator it = parametr.begin();
-	std::vector<std::string>::iterator ite = parametr.end();
-	for (; it != ite; ++it) {
-		std::string::size_type pos = it->find(" ");
-		if (pos != std::string::npos) {
-			std::string key = it->substr(0, pos);
-			std::string value = it->substr(pos + 1);
+	for(size_t i = 0; i < parametr.size(); i++) {
+		std::string str = parametr[i];
+		ServConf::checkToken(str);
+		std::vector<std::string> param = ft_split(str);
+		if (param.size() > 1) {
+			std::string key = param[0];
+			std::vector<std::string> value;
+			for (size_t i = 1; i < param.size(); i++)
+				value.push_back(param[i]);
 			if (key == "root")
-				location.setRootLocation(value);
+				location.setRootLocation(value[0]);
 			else if (key == "methods")
 				location.setMethods(value);
 			else if (key == "autoindex")
-				location.setAutoindex(value);
+				location.setAutoindex(value[0]);
 			else if (key == "index")
-				location.setIndexLocation(value);
+				location.setIndexLocation(value[0]);
 			else if (key == "return")
-				location.setReturn(value);
-			else if (key == "alias")
-				location.setAlias(value);
+				location.setReturn(value[0]);
+			else if (key == "alias") {
+				location.setAlias(value[0]);
+			}
 			else if (key == "cgi_path")
 				location.setCgiPath(value);
 			else if (key == "cgi_extension")
 				location.setCgiExtension(value);
 			else if (key == "max_body_size")
-				location.setMaxBodySize(value);
+				location.setMaxBodySize(value[0]);
+
+			// if (key == "root")
+			// 	location.setRootLocation(value);
+			// else if (key == "methods")
+			// 	location.setMethods(value);
+			// else if (key == "autoindex")
+			// 	location.setAutoindex(value);
+			// else if (key == "index")
+			// 	location.setIndexLocation(value);
+			// else if (key == "return")
+			// 	location.setReturn(value);
+			// else if (key == "alias") {
+			// 	std::cout << "alias: " << value << std::endl;
+			// 	location.setAlias(value);
+			// }
+			// else if (key == "cgi_path")
+			// 	location.setCgiPath(value);
+			// else if (key == "cgi_extension")
+			// 	location.setCgiExtension(value);
+			// else if (key == "max_body_size")
+			// 	location.setMaxBodySize(value);
 		}
 	}
 	location.setPath(nameLocation);
@@ -136,13 +166,6 @@ void ServConf::setAutoindex(std::string autoindex) {
 		_autoindex = false;
 	else
 		throw std::runtime_error("Error: invalid autoindex");
-}
-
-bool ServConf::isValidHost(std::string host) const {
-	struct sockaddr_in addr;
-	if (inet_pton(AF_INET, host.c_str(), &addr.sin_addr) == 1)
-		return true;
-	return false;
 }
 
 bool ServConf::isValidErrorPages() {
@@ -228,7 +251,10 @@ const std::vector<Location>::iterator ServConf::getLocationKey(std::string key) 
 }
 
 void ServConf::checkToken(std::string &parametr) {
-	std::string::size_type pos = parametr.find(";");
+	std::string::size_type pos = parametr.find('#');
+	if (pos != std::string::npos)
+		parametr.erase(pos, parametr.find('\n', pos) - pos);
+	pos = parametr.find(";");
 	if (pos != std::string::npos)
 		parametr.erase(pos);
 }
