@@ -1,7 +1,6 @@
-#ifndef PARSECONFIGFILE_HPP
-#define PARSECONFIGFILE_HPP
+#pragma once
 
-#include "Webserv.hpp"
+#include "main.hpp"
 
 class ServConf;
 
@@ -23,4 +22,3 @@ class ParseConfigFile {
 		size_t						nbr_serv;
 };
 
-#endif

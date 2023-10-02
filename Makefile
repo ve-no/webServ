@@ -1,4 +1,4 @@
-SRC = ${addprefix src/, main.cpp ConfigFile.cpp Location.cpp ServConf.cpp ParseConfigFile.cpp Webserv.cpp}
+SRC = ${addprefix src/, main.cpp  Location.cpp ServConf.cpp ParseConfigFile.cpp Webserv.cpp}
 
 # REQUEST_SRC = ${addprefix src/request/, Request.cpp RequestParser.cpp}
 
@@ -6,7 +6,7 @@ SRC = ${addprefix src/, main.cpp ConfigFile.cpp Location.cpp ServConf.cpp ParseC
 
 INC_DIR = inc
 
-INC = ${addprefix inc/, ConfigFile.hpp Location.hpp ServConf.hpp ParseConfigFile.hpp Webserv.hpp}
+INC = ${addprefix inc/, Location.hpp ServConf.hpp ParseConfigFile.hpp Webserv.hpp}
 
 # SRC = ${MAIN_SRC} ${REQUEST_SRC}
 

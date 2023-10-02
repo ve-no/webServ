@@ -4,12 +4,16 @@
 
 int main (int ac, char **av) {
 
-	if (ac != 2) {
-		std::cout << "Usage: ./webserv <config_file>" << std::endl;
-		return 1;
-	}
-	else {
-		std::string config_file = av[1];
+	// if (ac != 2) {
+	// 	std::cout << "Usage: ./webserv <config_file>" << std::endl;
+	// 	return 1;
+	// }
+	// else {
+		char* conf = NULL;
+		if (ac == 2)
+			conf = av[1];
+		std::string config_file;
+		conf ? config_file = conf : config_file = "conf/default.conf";
 		ParseConfigFile parse;
 		try {
 			parse.parseConfigFile(config_file);
@@ -19,5 +23,5 @@ int main (int ac, char **av) {
 			return 1;
 		}
 		parse.print();
-	}
 }
+// }

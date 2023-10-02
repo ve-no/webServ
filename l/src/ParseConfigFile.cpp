@@ -1,4 +1,4 @@
-#include "ParseConfigFile.hpp"
+#include "../inc/main.hpp"
 
 ParseConfigFile::ParseConfigFile() : nbr_serv(0) {}
 

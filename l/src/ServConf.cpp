@@ -1,4 +1,4 @@
-#include "ServConf.hpp"
+#include "../inc/main.hpp"
 
 ServConf::ServConf() {
 	setRoot("/");

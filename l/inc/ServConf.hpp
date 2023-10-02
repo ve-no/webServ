@@ -1,7 +1,8 @@
-#ifndef SERVCONF_HPP
-#define SERVCONF_HPP
+#pragma once
 
-#include "Webserv.hpp"
+
+// #include "Webserv.hpp"
+# include "main.hpp"
 
 class Location;
 
@@ -86,4 +87,3 @@ class ServConf
 		int									listen_fd;
 };
 
-#endif

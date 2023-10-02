@@ -1,7 +1,6 @@
-#ifndef LOCATION_HPP
-#define LOCATION_HPP
+#pragma once
 
-#include "Webserv.hpp"
+#include "main.hpp"
 
 class Location
 {
@@ -56,4 +55,3 @@ class Location
 		unsigned long				client_max_body_size;
 };
 
-#endif
