@@ -10,7 +10,7 @@ Location::Location() {
 	_alias = "";
 	cgi_path = std::vector<std::string>();
 	cgi_extension = std::vector<std::string>();
-	client_max_body_size = MAX_CONTENT_LENGTH;
+	clientMaxBodySize = MAX_CONTENT_LENGTH;
 }
 
 Location::Location(const Location &other) {
@@ -28,7 +28,7 @@ Location &Location::operator=(const Location &rhs) {
 		_alias = rhs._alias;
 		cgi_path = rhs.cgi_path;
 		cgi_extension = rhs.cgi_extension;
-		client_max_body_size = rhs.client_max_body_size;
+		clientMaxBodySize = rhs.clientMaxBodySize;
 	}
 	return (*this);
 }
@@ -75,10 +75,10 @@ void Location::setCgiExtension(std::vector<std::string> extension) { cgi_extensi
 
 void Location::setMaxBodySize(std::string parametr) {
 	std::istringstream iss(parametr);
-	iss >> client_max_body_size;
+	iss >> clientMaxBodySize;
 }
 
-// void Location::setMaxBodySize(unsigned long parametr) { client_max_body_size = parametr; }
+// void Location::setMaxBodySize(unsigned long parametr) { clientMaxBodySize = parametr; }
 
 // getters
 const std::string &Location::getPath() const { return (path); }
@@ -99,7 +99,7 @@ const std::vector<std::string> &Location::getCgiPath() const { return (cgi_path)
 
 const std::vector<std::string> &Location::getCgiExtension() const { return (cgi_extension); }
 
-const unsigned long &Location::getMaxBodySize() const { return (client_max_body_size); }
+const unsigned long &Location::getMaxBodySize() const { return (clientMaxBodySize); }
 
 std::string Location::getPrintMethods() const {
 	std::string result = "";

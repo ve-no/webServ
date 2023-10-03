@@ -76,14 +76,15 @@ class ServConf
 	private:
 		uint16_t							port;
 		in_addr_t							host;
-		std::string							name_server;
+		std::string							nameServer;
 		std::string							root;
-		unsigned long						client_max_body_size;
+		unsigned long						clientMaxBodySize;
 		std::string							index;
 		bool								autoindex;
-		std::map<error_pages, std::string>	_error_pages;
+		std::map<error_pages, std::string>	_errorPages;
 		std::vector<Location> 				locations;
-		struct sockaddr_in 					server_address;
-		int									listen_fd;
+		struct sockaddr_in 					serveraddress;
+		int									listenFd;
+		std::string							uploadPath;
 };
 

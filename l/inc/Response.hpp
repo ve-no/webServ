@@ -15,7 +15,7 @@ class Response {
 		std::string isResourceFound(const std::string& fullPath);
 
 		// Generate a response for a given resource
-		std::string generateResponse(std::string fullPath, int flag);
+		std::string generateResponse(std::string fullPath, int flag, ServConf server);
 
 		// Check if the directory has index files
 		bool isDirHasIndexFiles(const std::string& directory, const std::string& indexFiles);

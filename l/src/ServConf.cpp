@@ -17,21 +17,21 @@ ServConf &ServConf::operator=(const ServConf &other) {
 	if (this != &other) {
 		port = other.port;
 		host = other.host;
-		name_server = other.name_server;
+		nameServer = other.nameServer;
 		root = other.root;
-		client_max_body_size = other.client_max_body_size;
+		clientMaxBodySize = other.clientMaxBodySize;
 		index = other.index;
 		autoindex = other.autoindex;
-		_error_pages = other._error_pages;
+		_errorPages = other._errorPages;
 		locations = other.locations;
-		server_address = other.server_address;
-		listen_fd = other.listen_fd;
+		serveraddress = other.serveraddress;
+		listenFd = other.listenFd;
 	}
 	return (*this);
 }
 
 void ServConf::setServerName(std::string server_name) {
-	name_server = server_name;
+	nameServer = server_name;
 }
 
 void ServConf::setHost(std::string parametr) {
@@ -49,7 +49,7 @@ void ServConf::setRoot(std::string root) {
 }
 
 void ServConf::setFd(int fd) {
-	listen_fd = fd;
+	listenFd = fd;
 }
 
 void ServConf::setListen(std::string parametr) {
@@ -57,7 +57,7 @@ void ServConf::setListen(std::string parametr) {
 }
 
 void ServConf::setClientMaxBodySize(std::string parametr) {
-	client_max_body_size = atoi(parametr.c_str());
+	clientMaxBodySize = atoi(parametr.c_str());
 }
 
 void ServConf::setErrorPages(std::vector<std::string> &parametr) {
@@ -78,7 +78,7 @@ void ServConf::setErrorPages(std::vector<std::string> &parametr) {
 		if (ServConf::accessFile(value, F_OK) < 0
 			|| ServConf::accessFile(value, R_OK) < 0)
 			throw std::runtime_error("Error: invalid error_page");
-		_error_pages[key] = value;
+		_errorPages[key] = value;
 
 	}
 }
@@ -154,8 +154,8 @@ void ServConf::setAutoindex(std::string autoindex) {
 }
 
 bool ServConf::isValidErrorPages() {
-	std::map<error_pages, std::string>::iterator it = _error_pages.begin();
-	std::map<error_pages, std::string>::iterator ite = _error_pages.end();
+	std::map<error_pages, std::string>::iterator it = _errorPages.begin();
+	std::map<error_pages, std::string>::iterator ite = _errorPages.end();
 	for (; it != ite; ++it) {
 		if (ServConf::accessFile(it->second, F_OK) < 0
 			|| ServConf::accessFile(it->second, R_OK) < 0)
@@ -186,7 +186,7 @@ int ServConf::isValidLocation(Location &location) const {
 
 // getters
 const std::string &ServConf::getServerName() {
-	return name_server;
+	return nameServer;
 }
 
 const uint16_t &ServConf::getPort() {
@@ -198,7 +198,7 @@ const in_addr_t &ServConf::getHost() {
 }
 
 const size_t &ServConf::getClientMaxBodySize() {
-	return client_max_body_size;
+	return clientMaxBodySize;
 }
 
 const std::vector<Location> &ServConf::getLocations() {
@@ -210,7 +210,7 @@ const std::string &ServConf::getRoot() {
 }
 
 const std::map<error_pages, std::string> &ServConf::getErrorPages() {
-	return _error_pages;
+	return _errorPages;
 }
 
 const std::string &ServConf::getIndex() {
@@ -222,7 +222,7 @@ const bool &ServConf::getAutoindex() {
 }
 
 const std::string &ServConf::getPathErrorPage(error_pages key) {
-	return _error_pages[key];
+	return _errorPages[key];
 }
 
 const std::vector<Location>::iterator ServConf::getLocationKey(std::string key) {
@@ -255,13 +255,13 @@ bool ServConf::checkLocaitons() const {
 }
 
 // void ServConf::setupServer() {
-// 	server_address.sin_family = AF_INET;
-// 	server_address.sin_addr.s_addr = host;
-// 	server_address.sin_port = htons(port);
+// 	serveraddress.sin_family = AF_INET;
+// 	serveraddress.sin_addr.s_addr = host;
+// 	serveraddress.sin_port = htons(port);
 // }
 
 int ServConf::getFd() {
-	return listen_fd;
+	return listenFd;
 }
 
 // define is path is directory or file
@@ -300,18 +300,19 @@ std::string ServConf::fileToString(std::string path) {
 
 int ServConf::isReadableAndExist(std::string const path, std::string const index) {
 	int		type;
+	std::string path_p = path + "/" + index;
 
-	type = getTypePath(path);
+	type = getTypePath(path_p);
 	if (type == -1)
 		return -1;
 	if (type == 1)
-		if ((accessFile(path, R_OK | X_OK)) == -1)
+		if ((accessFile(path_p, R_OK | X_OK)) == -1)
 			return -1;
 	if (type == 2)
-		if ((accessFile(path, R_OK)) == -1)
+		if ((accessFile(path_p, R_OK)) == -1)
 			return -1;
 	if (type == 0)
-		if ((accessFile(path + index, R_OK)) == -1)
+		if ((accessFile(path_p, R_OK)) == -1)
 			return -1;
 	return 0;
 }

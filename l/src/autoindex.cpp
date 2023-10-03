@@ -1,4 +1,3 @@
-#include "../inc/Webserv.hpp"
 #include "../inc/main.hpp"
 
 std::string autoindex_style()

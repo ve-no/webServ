@@ -27,11 +27,11 @@ std::string Response::isResourceFound(const std::string &fullPath)
 }
 
 // Generate a response for a given resource
-std::string Response::generateResponse(std::string fullPath, int flag)
+std::string Response::generateResponse(std::string fullPath, int flag, ServConf server)
 {
 	if (flag == 1)
 	{
-		fullPath += "index.html";
+		fullPath += server.getIndex();
 		contentType = "text/html";
 	}
 	std::ifstream file(fullPath.c_str(), std::ios::binary);
@@ -504,119 +504,124 @@ int Response::respond()
 		// 	return 0;
 		// }
 		setPath(location[0].getRootLocation() + _req.getPath());
+		// std::cout << getPath() << std::endl;
 		isResourceFound(getPath());
 		if (_req.getMethodStr() == "GET")
 		{
+
 			if (gettype() == "FILE")
 			{
-				set_response(generateResponse(getPath(), 0));
+				// std::cout << "GET HNA " << std::endl;
+				set_response(generateResponse(getPath(), 0, _Config_file[0]));
 				return 0;
 			}
-			// else if (gettype() == "FOLDER")
-			// {
-			// 	if (getPath()[(int)(getPath().size() - 1)] != '/')
-			// 		setPath(getPath() + "/");
-			// 	// ServConf::isReadableAndExist(getPath(), location[i].getIndexLocation());
-			// 	isDirHasIndexFiles(getPath(), location[i].getIndexLocation());
-			// 	if (!ServConf::isReadableAndExist(getPath(), location[i].getIndexLocation()))
-			// 	{
-			// 		setHeader("Content-Type", "text/html");
-			// 		set_response(generateResponse(getPath(), 1));
-			// 		return 0;
-			// 	}
-			// 	else
-			// 	{
-			// 		if (location[i].getAutoindex())
-			// 		{
-			// 			std::string response_body = autoindex_body((char *)getPath().c_str(), _req.getPath());
-			// 			std::string response = "HTTP/1.1 200 OK\r\n";
-			// 			response += "Content-Type: text/html\r\n";
-			// 			response += "Content-Length: " + to_string(response_body.length()) + "\r\n";
-			// 			response += "\r\n";
-			// 			response += response_body;
-			// 			set_response(response);
-			// 			return 0;
-			// 		}
-			// 		else
-			// 		{
-			// 			set_response(generateErrorResponse(403));
-			// 			return 0;
-			// 		}
-			// 	}
-			// }
-			// else
-			// {
-			// 	set_response(generateErrorResponse(404));
-			// 	return 0;
-			// }
+			else if (gettype() == "FOLDER")
+			{
+				if (getPath()[(int)(getPath().size() - 1)] != '/')
+					setPath(getPath() + "/");
+				// isDirHasIndexFiles(getPath(), location[i].getIndexLocation());
+
+				//ERROR HERE , WE SHOULD FIX IT LATER...
+				if (!ServConf::isReadableAndExist(getPath(), location[i].getIndexLocation()))
+				{
+					std::cout << "kayn auto index hna " << std::endl;
+					setHeader("Content-Type", "text/html");
+					set_response(generateResponse(getPath(), 1, _Config_file[0]));
+					return 0;
+				}
+				else
+				{
+					if (location[i].getAutoindex())
+					{
+						std::cout << "hna autoindex ta3 achoub " << std::endl;
+						std::string response_body = autoindex_body((char *)getPath().c_str(), _req.getPath());
+						std::string response = "HTTP/1.1 200 OK\r\n";
+						response += "Content-Type: text/html\r\n";
+						response += "Content-Length: " + to_string(response_body.length()) + "\r\n";
+						response += "\r\n";
+						response += response_body;
+						set_response(response);
+						return 0;
+					}
+					else
+					{
+						set_response(generateErrorResponse(403));
+						return 0;
+					}
+				}
+			}
+			else
+			{
+				set_response(generateErrorResponse(404));
+				return 0;
+			}
 		}
-		// else if (_req.getMethodStr() == "DELETE")
-		// {
-		// 	if (gettype() == "FILE")
-		// 	{
-		// 		std::string resourcePath = getPath();
-		// 		if (deleteResource(resourcePath))
-		// 		{
-		// 			// Resource deleted successfully
-		// 			std::string res = "HTTP/1.1 204 No Content\r\n";
-		// 			// Set appropriate headers
-		// 			setHeader("Server", "AstroServer");
-		// 			set_response(res);
-		// 			return 0;
-		// 		}
-		// 		else
-		// 		{
-		// 			set_response(generateErrorResponse(500));
-		// 			return 0;
-		// 		}
-		// 		// }
-		// 	}
-		// 	else if (gettype() == "FOLDER")
-		// 		set_response(generateErrorResponse(403));
-		// 	else
-		// 	{
-		// 		std::string res = "HTTP/1.1 404 Not Found\r\n";
-		// 		setHeader("Server", "AstroServer");
-		// 		setBody("Resource not found");
-		// 		set_response(res);
-		// 	}
-		// }
-		// else if (_req.getMethodStr() == "POST")
-		// {
-		// 	std::string _target_file = _Config_file.locations[i].root + _req.getPath();
-		// 	if (fileExists(_target_file))
-		// 	{
-		// 		set_response(generateErrorResponse(204));
-		// 		return 0;
-		// 	}
-		// 	std::ofstream file(_target_file.c_str(), std::ios::binary);
-		// 	if (file.fail())
-		// 	{
-		// 		set_response(generateErrorResponse(500));
-		// 		return 0;
-		// 	}
-		// 	if (_req.getMultiformFlag())
-		// 	{
-		// 		std::string body = _req.getBody();
-		// 		body = parseBoundary(body, _req.getBoundary());
-		// 		file.write(body.c_str(), body.length());
-		// 		set_response(generateErrorResponse(200));
-		// 		return 0;
-		// 	}
-		// 	else
-		// 	{
-		// 		file.write(_req.getBody().c_str(), _req.getBody().length());
-		// 		set_response(generateErrorResponse(200));
-		// 		return 0;
-		// 	}
-		// }
+		else if (_req.getMethodStr() == "DELETE")
+		{
+			if (gettype() == "FILE")
+			{
+				std::string resourcePath = getPath();
+				if (deleteResource(resourcePath))
+				{
+					// Resource deleted successfully
+					std::string res = "HTTP/1.1 204 No Content\r\n";
+					// Set appropriate headers
+					setHeader("Server", "AstroServer");
+					set_response(res);
+					return 0;
+				}
+				else
+				{
+					set_response(generateErrorResponse(500));
+					return 0;
+				}
+				// }
+			}
+			else if (gettype() == "FOLDER")
+				set_response(generateErrorResponse(403));
+			else
+			{
+				std::string res = "HTTP/1.1 404 Not Found\r\n";
+				setHeader("Server", "AstroServer");
+				setBody("Resource not found");
+				set_response(res);
+			}
+		}
+		else if (_req.getMethodStr() == "POST")
+		{
+			std::string _target_file = location[i].getRootLocation() + _req.getPath();
+			if (fileExists(_target_file))
+			{
+				set_response(generateErrorResponse(204));
+				return 0;
+			}
+			std::ofstream file(_target_file.c_str(), std::ios::binary);
+			if (file.fail())
+			{
+				set_response(generateErrorResponse(500));
+				return 0;
+			}
+			if (_req.getMultiformFlag())
+			{
+				std::string body = _req.getBody();
+				body = parseBoundary(body, _req.getBoundary());
+				file.write(body.c_str(), body.length());
+				set_response(generateErrorResponse(200));
+				return 0;
+			}
+			else
+			{
+				file.write(_req.getBody().c_str(), _req.getBody().length());
+				set_response(generateErrorResponse(200));
+				return 0;
+			}
+		}
 		// }
 		// didn't match the location
 	}
 	set_response(generateErrorResponse(405));
 	return 0;
 }
-
 // Helper function to generate a unique filename
 std::string Response::generateUniqueFilename()
 {

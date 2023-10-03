@@ -24,7 +24,7 @@
 
 #include "Webserv.hpp"
 #include "Request.hpp"
-#include "config.hpp"
+// #include "config.hpp"
 #include "Response.hpp"
 #include "ParseConfigFile.hpp"
 #include "ServConf.hpp"

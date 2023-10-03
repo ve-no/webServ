@@ -52,6 +52,6 @@ class Location
 		std::string					_alias;
 		std::vector<std::string>	cgi_path;
 		std::vector<std::string>	cgi_extension;
-		unsigned long				client_max_body_size;
+		unsigned long				clientMaxBodySize;
 };
 

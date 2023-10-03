@@ -137,8 +137,8 @@ void ParseConfigFile::createServer(std::string &config, ServConf &server) {
 			throw std::runtime_error("Error: Server config file is not well formated 9");
 		}
 	}
-	if (ServConf::isReadableAndExist(server.getRoot(), server.getIndex()) < 0)
-		throw std::runtime_error("Error: Index from config file not found 1");
+	// if (ServConf::isReadableAndExist(server.getRoot(), server.getIndex()) < 0)
+	// 	throw std::runtime_error("Error: Index from config file not found 1");
 	if (ServConf::isReadableAndExist(server.getRoot(), "") < 0)
 		throw std::runtime_error("Error: Root from config file not found 2");
 	// if (!server.checkLocaitons())

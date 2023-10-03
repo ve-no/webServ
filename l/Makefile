@@ -1,4 +1,4 @@
-MAIN_SRC = ${addprefix src/, main.cpp Webserv.cpp autoindex.cpp Response.cpp Request.cpp}
+MAIN_SRC = ${addprefix src/, *.cpp}
 
 # INC_DIR = inc
 
@@ -15,7 +15,7 @@ CFLAGS = -Wall -Wextra -Werror  -fsanitize=address -g -std=c++98
 
 all: ${NAME}
 
-${NAME}: ${SRC} 
+${NAME}: ${SRC}
 	${CC} ${CFLAGS} ${SRC}  -o ${NAME}
 
 clean:
