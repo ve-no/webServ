@@ -7,6 +7,8 @@ ParseConfigFile::~ParseConfigFile() {}
 void ParseConfigFile::parseConfigFile(const std::string &config_file) {
 	std::string content = ServConf::fileToString(config_file);
 	splitServers(content);
+	// std::cout << "nb server: " << content << std::endl;
+	// exit(0);
 	if (serv_conf.size() != nbr_serv)
 		throw std::runtime_error("Error: Server config file is not well formated 1");
 	for (size_t i = 0; i < nbr_serv; i++) {
@@ -26,12 +28,14 @@ void ParseConfigFile::parseConfigFile(const std::string &config_file) {
 void ParseConfigFile::splitServers(std::string &content) {
 	size_t start = 0;
 	size_t end = 1;
-	while (start < content.length() && start != end) {
+	while (start != end && start < content.length()) {
+
 		start = startServer(start, content);
 		end = endServer(start, content);
 		serv_conf.push_back(content.substr(start, end - start + 1));
 		nbr_serv++;
 		start = end;
+		start++;
 	}
 }
 
@@ -42,10 +46,6 @@ size_t ParseConfigFile::startServer(size_t start, std::string &content) {
 			break;
 	if (!content[pos])
 		return start;
-	// while (pos < content.size() && pos < pos + 7)
-	// if (!content[pos])
-	// std::cout << content.compare(pos, 6, "server") << std::endl;
-	// std::cout << content[pos+2] << std::endl;
 	if (content.compare(pos, 6, "server") != 0)
 		throw std::runtime_error("Error: Wrong character 1");
 	pos += 6;
@@ -53,23 +53,22 @@ size_t ParseConfigFile::startServer(size_t start, std::string &content) {
 			pos++;
 	if (content[pos] != '{')
 		throw std::runtime_error("Error: Wrong character");
-	return (pos + 1);
+	return (pos);
 }
 
 size_t ParseConfigFile::endServer(size_t start, std::string &content) {
 	size_t pos = start;
 	int count = 0;
-
-	for (pos = start; pos < content.size(); pos++) {
+	for (pos = start + 1; pos < content.size(); pos++) {
 		if (content[pos] == '{')
 			count++;
-		else if (content[pos] == '}') {
+		if (content[pos] == '}') {
 			if (count == 0)
 				return (pos + 1);
 			count--;
 		}
 	}
-	return (pos);
+	return (start);
 }
 
 void ParseConfigFile::createServer(std::string &config, ServConf &server) {
@@ -131,10 +130,10 @@ void ParseConfigFile::createServer(std::string &config, ServConf &server) {
 			}
 		}
 		else {
-			if (param.empty() || param[0] == "}")
+			if (param.empty() || param[0] == "}" || param[0] == "{")
 				continue;
 			else
-			throw std::runtime_error("Error: Server config file is not well formated 9");
+				throw std::runtime_error("Error: Server config file is not well formated 9");
 		}
 	}
 	if (ServConf::isReadableAndExist(server.getRoot(), server.getIndex()) < 0)
@@ -150,6 +149,7 @@ void ParseConfigFile::createServer(std::string &config, ServConf &server) {
 std::vector<ServConf> ParseConfigFile::getServers() {
 	return servers;
 }
+
 
 int ParseConfigFile::print() {
 	std::cout << "nb server: " << nbr_serv << std::endl;

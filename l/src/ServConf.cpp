@@ -26,6 +26,7 @@ ServConf &ServConf::operator=(const ServConf &other) {
 		locations = other.locations;
 		serveraddress = other.serveraddress;
 		listenFd = other.listenFd;
+		IP = other.IP;
 	}
 	return (*this);
 }
@@ -41,8 +42,11 @@ void ServConf::setHost(std::string parametr) {
 		parametr = "127.0.0.1";
 	if (inet_pton(AF_INET, parametr.c_str(), &addr.sin_addr) == 0)
 		throw std::runtime_error("Error: invalid host");
+	this->IP = parametr;
 	host = inet_addr(parametr.c_str());
 }
+
+std::string &ServConf::getIP() { return this->IP; }
 
 void ServConf::setRoot(std::string root) {
 	this->root = root;
@@ -254,11 +258,11 @@ bool ServConf::checkLocaitons() const {
 	return true;
 }
 
-// void ServConf::setupServer() {
-// 	serveraddress.sin_family = AF_INET;
-// 	serveraddress.sin_addr.s_addr = host;
-// 	serveraddress.sin_port = htons(port);
-// }
+void ServConf::	setupServer() {
+	serveraddress.sin_family = AF_INET;
+	serveraddress.sin_addr.s_addr = host;
+	serveraddress.sin_port = htons(port);
+}
 
 int ServConf::getFd() {
 	return listenFd;

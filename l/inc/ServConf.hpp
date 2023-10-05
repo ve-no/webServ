@@ -36,6 +36,7 @@ class ServConf
 
 		void	setHost(std::string parametr);
 		const	in_addr_t &getHost();
+		std::string	&getIP();
 
 		void	setRoot(std::string root);
 		const	std::string	&getRoot();
@@ -72,10 +73,12 @@ class ServConf
 		static int accessFile(std::string const path, int mode);
 		static std::string	fileToString(std::string path);
 		static int isReadableAndExist(std::string const path, std::string const index);
+		void	setupServer();
 
 	private:
 		uint16_t							port;
 		in_addr_t							host;
+		std::string							IP;
 		std::string							nameServer;
 		std::string							root;
 		unsigned long						clientMaxBodySize;

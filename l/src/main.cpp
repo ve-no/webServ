@@ -54,7 +54,7 @@ void bindSocketToAddress(int server_sock, const in_addr_t ip_address, const	uint
     }
 }
 
-void startListening(int server_sock, const in_addr_t ip_address, const	uint16_t port) {
+void startListening(int server_sock, std::string ip_address, const	uint16_t port) {
     if (listen(server_sock, 5) < 0) {
         handleErrorAndExit("Listen error", server_sock);
     }
@@ -66,6 +66,8 @@ void mini_webserver(std::vector<ServConf> servers) {
     // std::cout << ip_address << std::endl;
 
     const	uint16_t port = servers[0].getPort();
+    std::string ip = servers[0].getIP();
+    std::cout << "hi" << ip << std::endl;
     std::cout << port << std::endl;
     std::vector<Location> loc = servers[0].getLocations();
 // std::cout << loc[0].loc_name << std::endl;
@@ -73,7 +75,8 @@ void mini_webserver(std::vector<ServConf> servers) {
     int server_sock = createServerSocket();
     setSocketReuseOption(server_sock);
     bindSocketToAddress(server_sock, ip_address, port);
-    startListening(server_sock, ip_address, port);
+    std::cout << "hello  " << servers[0].getIP() << std::endl;
+    startListening(server_sock, servers[0].getIP(), port);
 
     while (true) {
         std::cout << std::endl << YELLOW_BOLD << "Waiting for connection..." << RESET << std::endl << std::endl;
