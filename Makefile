@@ -1,26 +1,21 @@
-SRC = ${addprefix src/, main.cpp  Location.cpp ServConf.cpp ParseConfigFile.cpp Webserv.cpp}
+MAIN_SRCS = ${addprefix sources/, main.cpp}
 
-# REQUEST_SRC = ${addprefix src/request/, Request.cpp RequestParser.cpp}
+CLASSES_SRCS = ${addprefix sources/classes/, Cgi.cpp Client.cpp ConfParser.cpp \
+				Location.cpp Multiplexer.cpp Request.cpp Response.cpp Server.cpp}
 
-# TEST_SRC = ${addprefix src/, example.cpp}
-
-INC_DIR = inc
-
-INC = ${addprefix inc/, Location.hpp ServConf.hpp ParseConfigFile.hpp Webserv.hpp}
-
-# SRC = ${MAIN_SRC} ${REQUEST_SRC}
-
-NAME = webserv
+UTILS_SRCS = ${addprefix sources/utils/, autoindex.cpp utils.cpp}
 
 CC = c++
 
-CFLAGS = -Wall -Wextra -Werror -std=c++98
+CFLAGS = -Wall -Wextra -Werror -std=c++98 -fsanitize=address
 
+NAME = webserv
 
 all: ${NAME}
 
-${NAME}: ${SRC} ${INC}
-	${CC} ${CFLAGS} ${SRC} -I ${INC_DIR} -o ${NAME}
+${NAME}: ${MAIN_SRCS} ${CLASSES_SRCS} ${UTILS_SRCS}
+	# ./update_conf.sh
+	${CC} ${CFLAGS} ${MAIN_SRCS} ${CLASSES_SRCS} ${UTILS_SRCS} -o ${NAME}
 
 clean:
 	rm -rf ${NAME}
@@ -28,5 +23,3 @@ clean:
 fclean: clean
 
 re: fclean all
-
-.PHONY: all clean fclean re
